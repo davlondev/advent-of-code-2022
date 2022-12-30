@@ -9,6 +9,11 @@ class Stack():
 
   def push(self, val):
     self.data.append(val) 
+  
+  def push_multi(self, vals: list):
+    #count = len(vals)
+    for val in reversed(vals): 
+      self.data.append(val)
 
   def pop(self):
     index = len(self.data)-1
@@ -16,15 +21,23 @@ class Stack():
     self.data = self.data[:index]
     return element
 
+  def pop_multi(self, count) -> list:
+    ret = []
+    for i in range(count):
+      ret.append(self.pop())
+    return ret
+
   def show(self):
     print('<', end='')
     for i in self.data: print(f' {i}', end='')
-    print(f'      top: {self.top()}')
+    #print(f'      top: {self.top()}')
+    print()
 
-  def top(self):
-    if len(self.data) > 0:
-      return self.data[len(self.data)-1]
-    return "error"
+  def top(self, count=0):
+    if len(self.data) <= 0:
+      return "empty stack"
+
+    return self.data[len(self.data)-1-count]
 
 
 
@@ -91,8 +104,14 @@ def solve(stacks, instructions) -> str:
     source = int(ins[int(ins.index('from')+1)])
     destination = int(ins[int(ins.index('to')+1)])
     print(ins, '----->', itemcount, source, destination, '\n')
-    for i in range(itemcount):
+
+    if itemcount == 1:
       stacks[destination-1].push(stacks[source-1].pop())
+
+    elif itemcount > 1:
+      print('multi')
+      stacks[destination-1].push_multi(stacks[source-1].pop_multi(itemcount))
+
     showstacks(stacks)
     print('-------------------------')
 
@@ -102,7 +121,7 @@ def solve(stacks, instructions) -> str:
   print('result:', ret)
   return ret
 
-#testinput = prep_input("testinput.txt")
+testinput = prep_input("testinput.txt")
 testinput = prep_input("input.txt")
 stacks, instructions = extract_stacks_and_instructions(testinput)
 showstacks(stacks)
