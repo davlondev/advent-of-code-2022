@@ -6,7 +6,6 @@ def prep_input(filename):
   f.close()
   return lines
 
-data = prep_input("input.txt")
 
 def is_unique(s: str) -> bool:
   l = len(s)
