@@ -1,5 +1,4 @@
 
-
 def get_input(file_path):
   with open(file_path) as f:
     lines = f.readlines()
@@ -8,13 +7,30 @@ def get_input(file_path):
     lines[i] = lines[i].replace('\n','')
   return lines
 
-def get_command(line):
-  x = line.split(' ')[1]
-  return x
+def get_command(line): return line.split(' ')[1]
 
-def get_size(line):
-  s = line.split(' ')[0]
-  return s
+def get_size(line): return line.split(' ')[0]
+
+def do_sizes(data):
+  data = data
+  root = '/'
+  # do root
+  for key in data:
+    if key == '/':
+      continue
+    data[root] += data[key]
+  # do rest
+  # {'/': 48381165, '/a/': 94269, '/a/e/': 584, '/d/': 24933642}
+  for key in data:
+    if key == '/': continue
+    curkey = key
+    for key2 in data:
+      if curkey == key2: continue
+      if str(curkey) in str(key2):
+        data[curkey] += data[key2]
+
+#  print(data)
+  return data
 
 def solve(data):
 
@@ -32,9 +48,15 @@ def solve(data):
     
     if cur_folder != "" and cur_folder[len(cur_folder)-1] != '/':
       cur_folder += '/'
-    if cur_folder == '': cur_folder = '/'
+    if cur_folder == '': 
+      cur_folder = '/'
+    else:
+     pass
+     #j if cur_folder[len(cur_folder)-1] == '/':
+      #  cur_folder = cur_folder[:-1]
     if cur_folder not in folders:
       folders[cur_folder] = 0
+
 
     if line[0] != '$':
 
@@ -71,13 +93,23 @@ def solve(data):
         print(f'\nfolder: "{cur_folder}"')
 
 
+
   print()
   print(total)
   print()
   print(logs)
-  print(folders)
+  #print(folders)
+  folders = do_sizes(folders)
+#  print(folders)
+
+  total = 0
+  for key in folders:
+    if folders[key] <= limit:
+      total += folders[key]
+  print("result:", total)
+
 
 data = get_input('testinput.txt')
-#data = get_input('input.txt')
+data = get_input('input.txt')
 
 solve(data)
